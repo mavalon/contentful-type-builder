@@ -1,3 +1,17 @@
+const themes = [
+  "Cerulean",
+  "Gray",
+  "Lizard",
+  "Mauve",
+  "Orange",
+  "Saffron",
+  "Salmon",
+  "Salsa",
+  "Straw",
+  "Sunglow",
+  "Turquoise"
+]
+
 // hours
 const schedule = (name, id) => {
   return {
@@ -74,6 +88,26 @@ const nameRepeatable = shortTextRequired('Name', 'name')
 const surname = shortTextRequired('Surname', 'surname')
 const value =  shortTextRequired('Value', 'value')
 
+// unique field
+const unique = (name, id) => {
+  return {
+    "id": id,
+    "name": name,
+    "type": "Symbol",
+    "localized": false,
+    "required": true,
+    "validations": [
+      {
+        "unique": true
+      }
+    ],
+    "disabled": false,
+    "omitted": false
+  }
+}
+const name = unique('name', 'Name')
+const slug = unique('slug', 'Slug')
+
 // short text (optional field)
 const shortTextOptional = (id, name) => {
   return {
@@ -100,39 +134,43 @@ const viewCollectionCta = shortTextOptional('viewCollectionCta', 'View Collectio
 const viewSimilarCta = shortTextOptional('viewSimilarCta', 'View Similar CTA')
 
 // long text
-const longText = {
-  "type": "Text",
-  "localized": false,
-  "required": false,
-  "validations": [],
-  "disabled": false,
-  "omitted": false
+const longText = (id, name, required = false, max = null) => {
+  return {
+    "id": id,
+    "name": name,
+    "type": "Text",
+    "localized": false,
+    "required": required,
+    "validations": max ? [
+      {
+        "size": {
+          "max": max
+        }
+      }
+    ] : [],
+    "disabled": false,
+    "omitted": false
+  }
 }
-const body = {
-  "id": "body",
-  "name": "Body",
-  ...longText,
-}
-const details = {
-  "id": "details",
-  "name": "Details",
-  ...longText,
-}
-const finePrint = {
-  "id": "finePrint",
-  "name": "Fine Print",
-  ...longText,
-}
-const moreInfo = {
-  "id": "moreInfo",
-  "name": "More Info",
-  ...longText,
-}
+const body = longText('body', 'Body')
+const descriptionLong = longText('description', 'Description', false, 1000)
+const descriptionMedium = longText('description', 'Description', false, 500)
+const details = longText('details', 'Details')
+const finePrint = longText('finePrint', 'Fine Print')
+const moreInfo = longText('moreInfo', 'More Info')
+const postface = longText('postface', 'Postface')
+const preface = longText('preface', 'Preface')
+const quote = longText('quote', 'Quotation')
+const titleBreaking = longText('title', 'Title', true, 250)
+const whatToExpect = longText('whatToExpect', 'What to Expect')
+const location = longText('location', 'Location', false, 250)
 
 // booleans
-const boolean = (b) => {
+const boolean = (id, name, b) => {
   return {
     "type": "Boolean",
+    "id": id,
+    "name": name,
     "localized": false,
     "required": false,
     "validations": [],
@@ -143,43 +181,21 @@ const boolean = (b) => {
     "omitted": false
   }
 }
-const invertColors = {
-  "id": "invertColors",
-  "name": "Invert Colors",
-  ...boolean(false)
-}
-const locationIsAddress = {
-  "id": "locationIsAddress",
-  "name": "Location Is Address",
-  ...boolean(false)
-}
-const themeBackground = {
-  "id": "themeBackground",
-  "name": "Theme Background",
-  ...boolean(false)
-}
-const splitView = {
-  "id": "splitView",
-  "name": "Split View",
-  ...boolean(true)
-}
-const isArtist = {
-  "id": "isArtist",
-  "name": "Is Artist",
-  ...boolean(true)
-}
-const showArrow = {
-  "id": "showArrow",
-  "name": "Show Arrow",
-  ...boolean(true)
-}
+const invertColors = boolean('invertColors', 'Invert Colors', false)
+const locationIsAddress = boolean('locationIsAddress', 'Location Is Address', false)
+const themeBackground = boolean('themeBackground', 'Theme Background', false)
+const splitView = boolean('splitView', 'Split View', true)
+const isArtist = boolean('isArtist', 'Is Artist', true)
+const showArrow = boolean('showArrow', 'Show Arrow', true)
 
 // link single content type
-const linkSingleContentType = (contentType) => {
+const linkSingleContentType = (id, name, contentType, required = false) => {
   return {
+    "id": id,
+    "name": name,
     "type": "Link",
     "localized": false,
-    "required": false,
+    "required": required,
     "validations": [
       {
         "linkContentType": [
@@ -192,107 +208,189 @@ const linkSingleContentType = (contentType) => {
     "linkType": "Entry"
   }
 }
-const seo = {
-  "id": "seo",
-  "name": "SEO",
-  ...linkSingleContentType('seo')
+const hero = linkSingleContentType('hero', 'Hero', 'heroSection', true)
+const seo = linkSingleContentType('seo', 'SEO', 'seo')
+const button = linkSingleContentType('button', 'Button', 'button')
+const contentBlock = linkSingleContentType('contentBlock', 'Content Block', 'contentBlock')
+const attribution = linkSingleContentType('attribution', 'Attribution', 'person')
+
+// link array content type
+const contentTypeArray = (id, name, types: string[], max = 100, required = false) => {
+  return {
+    "id": id,
+    "name": name,
+    "type": "Array",
+    "localized": false,
+    "required": required,
+    "validations": [
+      {
+        "size": {
+          "max": max
+        }
+      }
+    ],
+    "disabled": false,
+    "omitted": false,
+    "items": {
+      "type": "Link",
+      "validations": [
+        {
+          "linkContentType": [
+            ...types
+          ]
+        }
+      ],
+      "linkType": "Entry"
+    }
+  }
 }
-const button = {
-  "id": "button",
-  "name": "Button",
-  ...linkSingleContentType('button')
-}
-const contentBlock = {
-  "id": "contentBlock",
-  "name": "Content Block",
-  ...linkSingleContentType('contentBlock')
-}
+const buttonArray = contentTypeArray('buttons', 'Buttons', ['button'], 3)
+const content = contentTypeArray('content', 'Content', ['collection', 'contentBlock', 'event', 'exhibition'], 10, true)
+const components = contentTypeArray('components', 'Components', ['directory'], 10)
+const directory = contentTypeArray('list', 'List', ['person'])
+const featuredArtwork = contentTypeArray('featuredArtwork', 'Featured Artwork', ['artwork'], 10)
+const grid = contentTypeArray('grid', 'Grid', ['person']) // todo: why do we have directory and grid both with person arrays?
+const navSlides = contentTypeArray('navSlides', 'Nav Slides', ['textSlide'], 10)
+const pageSlides = contentTypeArray('pageSlides', 'Page Slides', ['artwork', 'collection', 'exhibition', 'page'])
+const preview = contentTypeArray('preview', 'Preview', ['artwork'], 10)
+const relatedArtwork = contentTypeArray('relatedArtwork', 'Related Artwork', ['artwork'])
+const sections = contentTypeArray('sections', 'Sections', ["contentBlock", 'contentGroupSection', 'heroSection', 'heroSlideshow', 'hoursAndLocationHero', 'slideshowSection', 'statGroupSection'], 15)
+const slidesHero = contentTypeArray('slides', 'Slides', ['heroSlide'])
+const stats = contentTypeArray('stats', 'Stats', ['statistic'], 5)
+const similarArtwork = contentTypeArray('similarArtwork', 'Similar Artwork', ['artwork'], 10)
 
 // link single image
-const linkSingleImage = {
-  "type": "Link",
-  "localized": false,
-  "required": false,
-  "validations": [
-    {
-      "linkMimetypeGroup": [
-        "image"
-      ]
-    }
-  ],
-  "disabled": false,
-  "omitted": false,
-  "linkType": "Asset"
+const linkSingleImage = (id, name) => {
+  return {
+    "id": id,
+    "name": name,
+    "type": "Link",
+    "localized": false,
+    "required": false,
+    "validations": [
+      {
+        "linkMimetypeGroup": [
+          "image"
+        ]
+      }
+    ],
+    "disabled": false,
+    "omitted": false,
+    "linkType": "Asset"
+  }
 }
-const fullImage = {
-  "id": "fullImage",
-  "name": "Full Image",
-  ...linkSingleImage
-}
-const heroImage = {
-  "id": "heroImage",
-  "name": "Hero Image",
-  ...linkSingleImage
-}
-const image = {
-  "id": "image",
-  "name": "Image",
-  ...linkSingleImage
-}
-const imageLeft = {
-  "id": "imageLeft",
-  "name": "Left Image",
-  ...linkSingleImage
-}
-const imageRight = {
-  "id": "imageRight",
-  "name": "Right Image",
-  ...linkSingleImage
-}
-const sectionImage = {
-  "id": "sectionImage",
-  "name": "Section Image",
-  ...linkSingleImage
-}
-const thumbnail = {
-  "id": "thumbnail",
-  "name": "Thumbnail",
-  ...linkSingleImage
-}
-const titleImage = {
-  "id": "titleImage",
-  "name": "Title Image",
-  ...linkSingleImage
-}
+const fullImage = linkSingleImage('fullImage', 'Full Image')
+const heroImage = linkSingleImage('heroImage', 'Hero Image')
+const image = linkSingleImage('image', 'Image')
+const imageLeft = linkSingleImage('imageLeft', 'Left Image')
+const imageRight = linkSingleImage('imageRight', 'Right Image')
+const sectionImage = linkSingleImage('sectionImage', 'Section Image')
+const thumbnail = linkSingleImage('thumbnail', 'Thumbnail')
+const titleImage = linkSingleImage('titleImage', 'Title Image')
 
 // date
-const date = {
-  "type": "Date",
-  "localized": false,
-  "required": false,
-  "validations": [],
-  "disabled": false,
-  "omitted": false
+const date = (id, name) => {
+  return {
+    "id": id,
+    "name": name,
+    "type": "Date",
+    "localized": false,
+    "required": false,
+    "validations": [],
+    "disabled": false,
+    "omitted": false
+  }
 }
-const endDate = {
-  "id": "endDate",
-  "name": "End Date",
-  ...date
-}
-const startDate = {
-  "id": "startDate",
-  "name": "Start Date",
-  ...date
-}
+const endDate = date('endDate', 'End Date')
+const startDate = date('startDate', 'Start Date')
 
-const common = {
-  longText,
-  shortTextRequired,
-  schedule,
+// basic image
+const basicImage = (id, name) => {
+  return {
+    "id": id,
+    "name": name,
+    "type": "Link",
+    "localized": false,
+    "required": false,
+    "validations": [
+      {
+        "linkMimetypeGroup": [
+          "image"
+        ]
+      }
+    ],
+    "disabled": false,
+    "omitted": false,
+    "linkType": "Asset"
+  }
 }
+const mainImage = basicImage('mainImage', 'Main Image')
 
-// commonly used unique configs
+// image array
+const imageArray = (id, name, max = null) => {
+  return {
+    "id": id,
+    "name": name,
+    "type": "Array",
+    "localized": false,
+    "required": false,
+    "validations": max ? [
+        {
+          "size": {
+            "max": max
+          }
+        }
+      ]
+      : [],
+    "disabled": false,
+    "omitted": false,
+    "items": {
+      "type": "Link",
+      "validations": [
+        {
+          "linkMimetypeGroup": [
+            "image"
+          ]
+        }
+      ],
+      "linkType": "Asset"
+    }
+  }
+}
+const gallery = imageArray('gallery', 'Gallery')
+const slidesImage = imageArray('slides', 'Slides')
+const images = imageArray('images', 'Images', 2)
 
+// select
+const select = (id, name, options = [], defaultValue = null) => {
+  const defaults = defaultValue ? {
+    "defaultValue": {
+      "en-US": defaultValue
+    }
+  } : {}
+  return {
+    "id": id,
+    "name": name,
+    "type": "Symbol",
+    "localized": false,
+    "required": !!defaultValue,
+    "validations": [
+      {
+        "in": options
+      }
+    ],
+    ...defaults,
+    "disabled": false,
+    "omitted": false
+  }
+}
+const icon = select('icon', 'Icon', ['Arrow', 'External', 'None'], 'Arrow')
+const borders = select('borders', 'Borders', ['All', 'Bottom', 'none'], 'All')
+const theme = select('theme', 'Theme', themes)
+
+// everything below this line are special types
+
+// assets
 const audio = {
   "id": "audio",
   "name": "Audio",
@@ -310,45 +408,16 @@ const audio = {
   "omitted": false,
   "linkType": "Asset"
 }
-const buttonArray = (max) => {
-  return  {
-    "id": "buttons",
-    "name": "Buttons",
-    "type": "Array",
-    "localized": false,
-    "required": false,
-    "validations": [
-      {
-        "size": {
-          "max": max
-        }
-      }
-    ],
-    "disabled": false,
-    "omitted": false,
-    "items": {
-      "type": "Link",
-      "validations": [
-        {
-          "linkContentType": [
-            "button"
-          ]
-        }
-      ],
-      "linkType": "Entry"
-    }
-  }
-}
-const content = {
-  "id": "content",
-  "name": "Content",
+const videos = {
+  "id": "videos",
+  "name": "Videos",
   "type": "Array",
   "localized": false,
-  "required": true,
+  "required": false,
   "validations": [
     {
       "size": {
-        "max": 10
+        "max": 2
       }
     }
   ],
@@ -358,49 +427,55 @@ const content = {
     "type": "Link",
     "validations": [
       {
-        "linkContentType": [
-          "collection",
-          "contentBlock",
-          "event",
-          "exhibition"
+        "linkMimetypeGroup": [
+          "video"
         ]
       }
     ],
-    "linkType": "Entry"
+    "linkType": "Asset"
   }
 }
-const descriptionMedium = {
-  "id": "description",
-  "name": "Description",
-  "type": "Text",
+
+// with regex
+const eventId = {
+  "id": "eventId",
+  "name": "Event ID",
+  "type": "Symbol",
   "localized": false,
-  "required": false,
+  "required": true,
   "validations": [
     {
-      "size": {
-        "max": 500
+      "unique": true
+    },
+    {
+      "regexp": {
+        "pattern": "^[0-9]+(\\.[0-9]*)?$",
+        "flags": null
       }
     }
   ],
   "disabled": false,
   "omitted": false
 }
-const descriptionLong = {
-  "id": "description",
-  "name": "Description",
-  "type": "Text",
+const url = {
+  "id": "link",
+  "name": "Link",
+  "type": "Symbol",
   "localized": false,
   "required": false,
   "validations": [
     {
-      "size": {
-        "max": 1000
+      "regexp": {
+        "pattern": "^(ftp|http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$",
+        "flags": null
       }
     }
   ],
   "disabled": false,
   "omitted": false
 }
+
+// rich text field
 const richText = {
   "id": "text",
   "name": "Text",
@@ -447,205 +522,7 @@ const richText = {
   "omitted": true
 }
 
-// specific use
-const art = {
-  "id": "art",
-  "name": "Art",
-  "type": "Object",
-  "localized": false,
-  "required": true,
-  "validations": [],
-  "disabled": false,
-  "omitted": false
-}
-const attribution = {
-  "id": "attribution",
-  "name": "Attribution",
-  "type": "Link",
-  "localized": false,
-  "required": false,
-  "validations": [
-    {
-      "linkContentType": [
-        "person"
-      ]
-    }
-  ],
-  "disabled": false,
-  "omitted": false,
-  "linkType": "Entry"
-}
-const borders = {
-    "id": "borders",
-    "name": "Borders",
-    "type": "Symbol",
-    "localized": false,
-    "required": false,
-    "validations": [
-      {
-        "in": [
-          "All",
-          "Bottom",
-          "None"
-        ]
-      }
-    ],
-    "defaultValue": {
-      "en-US": "All"
-    },
-    "disabled": false,
-    "omitted": false
-  }
-
-// todo: determine why components only has directory
-const components = {
-  "id": "components",
-  "name": "Components",
-  "type": "Array",
-  "localized": false,
-  "required": false,
-  "validations": [],
-  "disabled": false,
-  "omitted": false,
-  "items": {
-    "type": "Link",
-    "validations": [
-      {
-        "linkContentType": [
-          "directory"
-        ]
-      }
-    ],
-    "linkType": "Entry"
-  }
-}
-const directoryArray =  {
-  "id": "list",
-  "name": "List",
-  "type": "Array",
-  "localized": false,
-  "required": false,
-  "validations": [],
-  "disabled": false,
-  "omitted": false,
-  "items": {
-    "type": "Link",
-    "validations": [
-      {
-        "linkContentType": [
-          "person"
-        ]
-      }
-    ],
-    "linkType": "Entry"
-  }
-}
-const eventId = {
-  "id": "eventId",
-  "name": "Event ID",
-  "type": "Symbol",
-  "localized": false,
-  "required": true,
-  "validations": [
-    {
-      "unique": true
-    },
-    {
-      "regexp": {
-        "pattern": "^[0-9]+(\\.[0-9]*)?$",
-        "flags": null
-      }
-    }
-  ],
-  "disabled": false,
-  "omitted": false
-}
-const featuredArtwork = {
-  "id": "featuredArtwork",
-  "name": "Featured Artwork",
-  "type": "Array",
-  "localized": false,
-  "required": false,
-  "validations": [
-    {
-      "size": {
-        "max": 12
-      }
-    }
-  ],
-  "disabled": false,
-  "omitted": false,
-  "items": {
-    "type": "Link",
-    "validations": [
-      {
-        "linkContentType": [
-          "artwork"
-        ]
-      }
-    ],
-    "linkType": "Entry"
-  }
-}
-const gallery = {
-  "id": "gallery",
-  "name": "Gallery",
-  "type": "Array",
-  "localized": false,
-  "required": false,
-  "validations": [],
-  "disabled": false,
-  "omitted": false,
-  "items": {
-    "type": "Link",
-    "validations": [
-      {
-        "linkMimetypeGroup": [
-          "image"
-        ]
-      }
-    ],
-    "linkType": "Asset"
-  }
-}
-const grid = {
-  "id": "grid",
-  "name": "Grid",
-  "type": "Array",
-  "localized": false,
-  "required": false,
-  "validations": [],
-  "disabled": false,
-  "omitted": false,
-  "items": {
-    "type": "Link",
-    "validations": [
-      {
-        "linkContentType": [
-          "person"
-        ]
-      }
-    ],
-    "linkType": "Entry"
-  }
-}
-const hero = {
-  "id": "hero",
-  "name": "Hero",
-  "type": "Link",
-  "localized": false,
-  "required": true,
-  "validations": [
-    {
-      "linkContentType": [
-        "heroSection"
-      ]
-    }
-  ],
-  "disabled": false,
-  "omitted": false,
-  "linkType": "Entry"
-}
+// miscellaneous
 const hoursHeading = {
   "id": "hoursHeading",
   "name": "Hours Heading",
@@ -658,54 +535,6 @@ const hoursHeading = {
   },
   "disabled": false,
   "omitted": false
-}
-const icon = {
-  "id": "icon",
-  "name": "Icon",
-  "type": "Symbol",
-  "localized": false,
-  "required": true,
-  "validations": [
-    {
-      "in": [
-        "Arrow",
-        "External",
-        "None"
-      ]
-    }
-  ],
-  "defaultValue": {
-    "en-US": "Arrow"
-  },
-  "disabled": false,
-  "omitted": false
-}
-const images = {
-  "id": "images",
-  "name": "Images",
-  "type": "Array",
-  "localized": false,
-  "required": false,
-  "validations": [
-    {
-      "size": {
-        "max": 2
-      }
-    }
-  ],
-  "disabled": false,
-  "omitted": false,
-  "items": {
-    "type": "Link",
-    "validations": [
-      {
-        "linkMimetypeGroup": [
-          "image"
-        ]
-      }
-    ],
-    "linkType": "Asset"
-  }
 }
 const imageRestricted = {
   "id": "image",
@@ -730,39 +559,6 @@ const imageRestricted = {
   "omitted": false,
   "linkType": "Asset"
 }
-const location = {
-  "id": "location",
-  "name": "Location",
-  "type": "Text",
-  "localized": false,
-  "required": false,
-  "validations": [
-    {
-      "size": {
-        "max": 250
-      }
-    }
-  ],
-  "disabled": false,
-  "omitted": false
-}
-const mainImage = {
-  "id": "mainImage",
-    "name": "Main Image",
-    "type": "Link",
-    "localized": false,
-    "required": false,
-    "validations": [
-    {
-      "linkMimetypeGroup": [
-        "image"
-      ]
-    }
-  ],
-    "disabled": false,
-    "omitted": false,
-    "linkType": "Asset"
-}
 const maxColumns = {
   "id": "maxColumns",
   "name": "Max Columns",
@@ -783,277 +579,6 @@ const maxColumns = {
   "disabled": false,
   "omitted": false
 }
-const name = {
-  "id": "name",
-  "name": "Name",
-  "type": "Symbol",
-  "localized": false,
-  "required": true,
-  "validations": [
-  {
-    "unique": true
-  }
-],
-  "disabled": false,
-  "omitted": false
-}
-const navSlides = {
-  "id": "navSlides",
-  "name": "Nav Slides",
-  "type": "Array",
-  "localized": false,
-  "required": false,
-  "validations": [
-    {
-      "size": {
-        "max": 10
-      }
-    }
-  ],
-  "disabled": false,
-  "omitted": false,
-  "items": {
-    "type": "Link",
-    "validations": [
-      {
-        "linkContentType": [
-          "textSlide"
-        ]
-      }
-    ],
-    "linkType": "Entry"
-  }
-}
-const pageSlides = {
-  "id": "pageSlides",
-  "name": "Page Slides",
-  "type": "Array",
-  "localized": false,
-  "required": false,
-  "validations": [],
-  "disabled": false,
-  "omitted": false,
-  "items": {
-    "type": "Link",
-    "validations": [
-      {
-        "linkContentType": [
-          "artwork",
-          "collection",
-          "exhibition",
-          "page"
-        ]
-      }
-    ],
-    "linkType": "Entry"
-  }
-}
-const postface = {
-  "id": "postface",
-  "name": "Postface",
-  ...longText,
-}
-const preface = {
-  "id": "preface",
-  "name": "Preface",
-  ...longText,
-}
-const preview = {
-  "id": "preview",
-  "name": "Preview",
-  "type": "Array",
-  "localized": false,
-  "required": false,
-  "validations": [
-    {
-      "size": {
-        "max": 10
-      }
-    }
-  ],
-  "disabled": false,
-  "omitted": false,
-  "items": {
-    "type": "Link",
-    "validations": [
-      {
-        "linkContentType": [
-          "artwork"
-        ]
-      }
-    ],
-    "linkType": "Entry"
-  }
-}
-const quote = {
-  "id": "quote",
-  "name": "Quotation",
-  ...longText,
-}
-const relatedArtwork = {
-  "id": "relatedArtwork",
-  "name": "Related Artwork",
-  "type": "Array",
-  "localized": false,
-  "required": false,
-  "validations": [],
-  "disabled": false,
-  "omitted": false,
-  "items": {
-    "type": "Link",
-    "validations": [
-      {
-        "linkContentType": [
-          "artwork"
-        ]
-      }
-    ],
-    "linkType": "Entry"
-  }
-}
-const sections = {
-  "id": "sections",
-  "name": "Sections",
-  "type": "Array",
-  "localized": false,
-  "required": false,
-  "validations": [
-    {
-      "size": {
-        "max": 15
-      }
-    }
-  ],
-  "disabled": false,
-  "omitted": false,
-  "items": {
-    "type": "Link",
-    "validations": [
-      {
-        "linkContentType": [
-          "contentBlock",
-          "contentGroupSection",
-          "heroSection",
-          "heroSlideshow",
-          "hoursAndLocationHero",
-          "slideshowSection",
-          "statGroupSection"
-        ]
-      }
-    ],
-    "linkType": "Entry"
-  }
-}
-const similarArtwork = {
-  "id": "similarArtwork",
-    "name": "Similar Artwork",
-    "type": "Array",
-    "localized": false,
-    "required": false,
-    "validations": [
-    {
-      "size": {
-        "max": 10
-      }
-    }
-  ],
-    "disabled": false,
-    "omitted": false,
-    "items": {
-    "type": "Link",
-      "validations": [
-      {
-        "linkContentType": [
-          "artwork"
-        ]
-      }
-    ],
-      "linkType": "Entry"
-  }
-}
-const slidesHero = {
-  "id": "slides",
-  "name": "Slides",
-  "type": "Array",
-  "localized": false,
-  "required": false,
-  "validations": [],
-  "disabled": false,
-  "omitted": false,
-  "items": {
-    "type": "Link",
-    "validations": [
-      {
-        "linkContentType": [
-          "heroSlide"
-        ]
-      }
-    ],
-    "linkType": "Entry"
-  }
-}
-const slidesImage = {
-  "id": "slides",
-  "name": "Slides",
-  "type": "Array",
-  "localized": false,
-  "required": false,
-  "validations": [],
-  "disabled": false,
-  "omitted": false,
-  "items": {
-    "type": "Link",
-    "validations": [
-      {
-        "linkMimetypeGroup": [
-          "image"
-        ]
-      }
-    ],
-    "linkType": "Asset"
-  }
-}
-const slug = {
-  "id": "slug",
-  "name": "Slug",
-  "type": "Symbol",
-  "localized": false,
-  "required": true,
-  "validations": [
-    {
-      "unique": true
-    }
-  ],
-  "disabled": false,
-  "omitted": false
-}
-const stats = {
-  "id": "stats",
-  "name": "Stats",
-  "type": "Array",
-  "localized": false,
-  "required": true,
-  "validations": [
-    {
-      "size": {
-        "max": 5
-      }
-    }
-  ],
-  "disabled": false,
-  "omitted": false,
-  "items": {
-    "type": "Link",
-    "validations": [
-      {
-        "linkContentType": [
-          "statistic"
-        ]
-      }
-    ],
-    "linkType": "Entry"
-  }
-}
 const tags = {
   "id": "tags",
   "name": "Tags",
@@ -1064,9 +589,21 @@ const tags = {
   "disabled": false,
   "omitted": false,
   "items": {
-  "type": "Symbol",
+    "type": "Symbol",
     "validations": []
+  }
 }
+
+// need to specify app within contentful
+const art = {
+  "id": "art",
+  "name": "Art",
+  "type": "Object",
+  "localized": false,
+  "required": true,
+  "validations": [],
+  "disabled": false,
+  "omitted": false
 }
 const tessituraReference = {
   "id": "tessituraReference",
@@ -1077,97 +614,6 @@ const tessituraReference = {
   "validations": [],
   "disabled": false,
   "omitted": false
-}
-const theme = {
-  "id": "theme",
-  "name": "Theme",
-  "type": "Symbol",
-  "localized": false,
-  "required": false,
-  "validations": [
-    {
-      "in": [
-        "Cerulean",
-        "Gray",
-        "Lizard",
-        "Mauve",
-        "Orange",
-        "Saffron",
-        "Salmon",
-        "Salsa",
-        "Straw",
-        "Sunglow",
-        "Turquoise"
-      ]
-    }
-  ],
-  "disabled": false,
-  "omitted": false
-}
-const titleBreaking = {
-  "id": "title",
-  "name": "Title",
-  "type": "Text",
-  "localized": false,
-  "required": true,
-  "validations": [
-    {
-      "size": {
-        "max": 250
-      }
-    }
-  ],
-  "disabled": false,
-  "omitted": false
-}
-const url = {
-  "id": "link",
-  "name": "Link",
-  "type": "Symbol",
-  "localized": false,
-  "required": false,
-  "validations": [
-    {
-      "regexp": {
-        "pattern": "^(ftp|http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$",
-        "flags": null
-      }
-    }
-  ],
-  "disabled": false,
-  "omitted": false
-}
-const videos = {
-  "id": "videos",
-  "name": "Videos",
-  "type": "Array",
-  "localized": false,
-  "required": false,
-  "validations": [
-  {
-    "size": {
-      "max": 2
-    }
-  }
-],
-  "disabled": false,
-  "omitted": false,
-  "items": {
-  "type": "Link",
-    "validations": [
-    {
-      "linkMimetypeGroup": [
-        "video"
-      ]
-    }
-  ],
-    "linkType": "Asset"
-}
-}
-const whatToExpect = {
-  "id": "whatToExpect",
-  "name": "What to Expect",
-  ...longText,
 }
 
 export default {
@@ -1187,7 +633,7 @@ export default {
   descriptionMedium,
   descriptionShort,
   details,
-  directoryArray,
+  directory,
   endDate,
   eventId,
   externalUrl,

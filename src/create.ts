@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 import { promises } from 'fs'
-import library from './library/fields'
+import library from './library/fields.js'
 import contentful, {ContentFields, ContentTypeProps, KeyValueMap} from 'contentful-management'
 
 dotenv.config({path: '.env'})
@@ -8,7 +8,7 @@ dotenv.config({path: '.env'})
 const accessToken = process.env.CONTENTFUL_ACCESS_TOKEN
 const spaceId = process.env.CONTENTFUL_SPACE_ID
 const environmentId = process.env.CONTENTFUL_ENVIRONMENT
-const jsonFilePath = './json/fields.json'
+const jsonFilePath = './json/widget.json'
 
 const scopedPlainClient = contentful.createClient(
   {
@@ -56,24 +56,20 @@ if (contentTypeId) {
   if (error?.status === 404) {
     // create the content type if contentTypeId doesn't exist
     console.log('Create new contentType...')
-    console.log(JSON.stringify(obj))
-    let fields = []
-    const dataFields = fields?.map((field) => {
-      // const myVar = field as ObjectKey
-      fields = [...fields, library[field]]
-      console.log(JSON.stringify(fields))
-    })
-    // const res = await scopedPlainClient.contentType.createWithId({ contentTypeId },
-    //   {
-    //     name,
-    //     description,
-    //     displayField,
-    //     fields,
-    //   }
-    // )
-    // if (res) {
-    //   console.log(JSON.stringify(res))
-    // }
+    // let fields = []
+    const dataFields = fields?.map((field) => <ContentFields>library[field])
+    console.log(JSON.stringify(dataFields))
+    const res = await scopedPlainClient.contentType.createWithId({ contentTypeId },
+      {
+        name,
+        description,
+        displayField,
+        fields: dataFields,
+      }
+    )
+    if (res) {
+      console.log(JSON.stringify(res))
+    }
   } else if (error?.status) {
     // do nothing at all
     console.log(`Error status: ${error.status}`)
