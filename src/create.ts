@@ -8,7 +8,7 @@ dotenv.config({path: '.env'})
 const accessToken = process.env.CONTENTFUL_ACCESS_TOKEN
 const spaceId = process.env.CONTENTFUL_SPACE_ID
 const environmentId = process.env.CONTENTFUL_ENVIRONMENT
-const jsonFilePath = './json/widget.json'
+const jsonFilePath = './json/fields.json'
 
 const scopedPlainClient = contentful.createClient(
   {
