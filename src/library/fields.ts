@@ -75,14 +75,31 @@ const surname = shortTextRequired('Surname', 'surname')
 const value =  shortTextRequired('Value', 'value')
 
 // short text (optional field)
-const shortTextOptional = {
-  "type": "Symbol",
-  "localized": false,
-  "required": false,
-  "validations": [],
-  "disabled": false,
-  "omitted": false
+const shortTextOptional = (id, name) => {
+  return {
+    "id": id,
+    "name": name,
+    "type": "Symbol",
+    "localized": false,
+    "required": false,
+    "validations": [],
+    "disabled": false,
+    "omitted": false
+  }
 }
+const descriptionShort = shortTextOptional('description', 'Description')
+const externalUrl = shortTextOptional('externalUrl', 'External URL')
+const eyebrow = shortTextOptional('eyebrow', 'Eyebrow')
+const givenNames = shortTextOptional('givenNames', 'Given Names')
+const heading = shortTextOptional('heading', 'Given Heading')
+const heroCaption = shortTextOptional('heroCaption', 'Hero Caption')
+const subheading = shortTextOptional('subheading', 'Subheading')
+const subtitle = shortTextOptional('subtitle', 'Subtitle')
+const title = shortTextOptional('title', 'Title')
+const viewCollectionCta = shortTextOptional('viewCollectionCta', 'View Collection CTA')
+const viewSimilarCta = shortTextOptional('viewSimilarCta', 'View Similar CTA')
+
+// long text
 const longText = {
   "type": "Text",
   "localized": false,
@@ -91,6 +108,182 @@ const longText = {
   "disabled": false,
   "omitted": false
 }
+const body = {
+  "id": "body",
+  "name": "Body",
+  ...longText,
+}
+const details = {
+  "id": "details",
+  "name": "Details",
+  ...longText,
+}
+const finePrint = {
+  "id": "finePrint",
+  "name": "Fine Print",
+  ...longText,
+}
+const moreInfo = {
+  "id": "moreInfo",
+  "name": "More Info",
+  ...longText,
+}
+
+// booleans
+const boolean = (b) => {
+  return {
+    "type": "Boolean",
+    "localized": false,
+    "required": false,
+    "validations": [],
+    "defaultValue": {
+      "en-US": b
+    },
+    "disabled": false,
+    "omitted": false
+  }
+}
+const invertColors = {
+  "id": "invertColors",
+  "name": "Invert Colors",
+  ...boolean(false)
+}
+const locationIsAddress = {
+  "id": "locationIsAddress",
+  "name": "Location Is Address",
+  ...boolean(false)
+}
+const themeBackground = {
+  "id": "themeBackground",
+  "name": "Theme Background",
+  ...boolean(false)
+}
+const splitView = {
+  "id": "splitView",
+  "name": "Split View",
+  ...boolean(true)
+}
+const isArtist = {
+  "id": "isArtist",
+  "name": "Is Artist",
+  ...boolean(true)
+}
+const showArrow = {
+  "id": "showArrow",
+  "name": "Show Arrow",
+  ...boolean(true)
+}
+
+// link single content type
+const linkSingleContentType = (contentType) => {
+  return {
+    "type": "Link",
+    "localized": false,
+    "required": false,
+    "validations": [
+      {
+        "linkContentType": [
+          contentType
+        ]
+      }
+    ],
+    "disabled": false,
+    "omitted": false,
+    "linkType": "Entry"
+  }
+}
+const seo = {
+  "id": "seo",
+  "name": "SEO",
+  ...linkSingleContentType('seo')
+}
+const button = {
+  "id": "button",
+  "name": "Button",
+  ...linkSingleContentType('button')
+}
+const contentBlock = {
+  "id": "contentBlock",
+  "name": "Content Block",
+  ...linkSingleContentType('contentBlock')
+}
+
+// link single image
+const linkSingleImage = {
+  "type": "Link",
+  "localized": false,
+  "required": false,
+  "validations": [
+    {
+      "linkMimetypeGroup": [
+        "image"
+      ]
+    }
+  ],
+  "disabled": false,
+  "omitted": false,
+  "linkType": "Asset"
+}
+const fullImage = {
+  "id": "fullImage",
+  "name": "Full Image",
+  ...linkSingleImage
+}
+const heroImage = {
+  "id": "heroImage",
+  "name": "Hero Image",
+  ...linkSingleImage
+}
+const image = {
+  "id": "image",
+  "name": "Image",
+  ...linkSingleImage
+}
+const imageLeft = {
+  "id": "imageLeft",
+  "name": "Left Image",
+  ...linkSingleImage
+}
+const imageRight = {
+  "id": "imageRight",
+  "name": "Right Image",
+  ...linkSingleImage
+}
+const sectionImage = {
+  "id": "sectionImage",
+  "name": "Section Image",
+  ...linkSingleImage
+}
+const thumbnail = {
+  "id": "thumbnail",
+  "name": "Thumbnail",
+  ...linkSingleImage
+}
+const titleImage = {
+  "id": "titleImage",
+  "name": "Title Image",
+  ...linkSingleImage
+}
+
+// date
+const date = {
+  "type": "Date",
+  "localized": false,
+  "required": false,
+  "validations": [],
+  "disabled": false,
+  "omitted": false
+}
+const endDate = {
+  "id": "endDate",
+  "name": "End Date",
+  ...date
+}
+const startDate = {
+  "id": "startDate",
+  "name": "Start Date",
+  ...date
+}
 
 const common = {
   longText,
@@ -98,33 +291,8 @@ const common = {
   schedule,
 }
 
-const art = {
-  "id": "art",
-  "name": "Art",
-  "type": "Object",
-  "localized": false,
-  "required": true,
-  "validations": [],
-  "disabled": false,
-  "omitted": false
-}
-const attribution = {
-  "id": "attribution",
-  "name": "Attribution",
-  "type": "Link",
-  "localized": false,
-  "required": false,
-  "validations": [
-    {
-      "linkContentType": [
-        "person"
-      ]
-    }
-  ],
-  "disabled": false,
-  "omitted": false,
-  "linkType": "Entry"
-}
+// commonly used unique configs
+
 const audio = {
   "id": "audio",
   "name": "Audio",
@@ -141,49 +309,6 @@ const audio = {
   "disabled": false,
   "omitted": false,
   "linkType": "Asset"
-}
-const body = {
-  "id": "body",
-  "name": "Body",
-  ...longText,
-}
-const borders = {
-    "id": "borders",
-    "name": "Borders",
-    "type": "Symbol",
-    "localized": false,
-    "required": false,
-    "validations": [
-      {
-        "in": [
-          "All",
-          "Bottom",
-          "None"
-        ]
-      }
-    ],
-    "defaultValue": {
-      "en-US": "All"
-    },
-    "disabled": false,
-    "omitted": false
-  }
-const button = {
-  "id": "button",
-  "name": "Button",
-  "type": "Link",
-  "localized": false,
-  "required": false,
-  "validations": [
-    {
-      "linkContentType": [
-        "button"
-      ]
-    }
-  ],
-  "disabled": false,
-  "omitted": false,
-  "linkType": "Entry"
 }
 const buttonArray = (max) => {
   return  {
@@ -212,27 +337,6 @@ const buttonArray = (max) => {
       ],
       "linkType": "Entry"
     }
-  }
-}
-const components = {
-  "id": "components",
-  "name": "Components",
-  "type": "Array",
-  "localized": false,
-  "required": false,
-  "validations": [],
-  "disabled": false,
-  "omitted": false,
-  "items": {
-    "type": "Link",
-    "validations": [
-      {
-        "linkContentType": [
-          "directory"
-        ]
-      }
-    ],
-    "linkType": "Entry"
   }
 }
 const content = {
@@ -265,24 +369,7 @@ const content = {
     "linkType": "Entry"
   }
 }
-const contentBlock = {
-  "id": "contentBlock",
-  "name": "Content Block",
-  "type": "Link",
-  "localized": false,
-  "required": true,
-  "validations": [
-    {
-      "linkContentType": [
-        "contentBlock"
-      ]
-    }
-  ],
-  "disabled": false,
-  "omitted": false,
-  "linkType": "Entry"
-}
-const description = {
+const descriptionMedium = {
   "id": "description",
   "name": "Description",
   "type": "Text",
@@ -314,15 +401,123 @@ const descriptionLong = {
   "disabled": false,
   "omitted": false
 }
-const descriptionShort = {
-  "id": "description",
-  "name": "Description",
-  ...shortTextOptional,
+const richText = {
+  "id": "text",
+  "name": "Text",
+  "type": "RichText",
+  "localized": false,
+  "required": false,
+  "validations": [
+    {
+      "enabledMarks": [
+        "bold",
+        "italic",
+        "underline",
+        "code"
+      ],
+      "message": "Only bold, italic, underline, and code marks are allowed"
+    },
+    {
+      "enabledNodeTypes": [
+        "heading-1",
+        "heading-2",
+        "heading-3",
+        "heading-4",
+        "heading-5",
+        "heading-6",
+        "ordered-list",
+        "unordered-list",
+        "hr",
+        "blockquote",
+        "embedded-entry-block",
+        "embedded-asset-block",
+        "table",
+        "hyperlink",
+        "entry-hyperlink",
+        "asset-hyperlink",
+        "embedded-entry-inline"
+      ],
+      "message": "Only heading 1, heading 2, heading 3, heading 4, heading 5, heading 6, ordered list, unordered list, horizontal rule, quote, block entry, asset, table, link to Url, link to entry, link to asset, and inline entry nodes are allowed"
+    },
+    {
+      "nodes": {}
+    }
+  ],
+  "disabled": true,
+  "omitted": true
 }
-const details = {
-  "id": "details",
-  "name": "Details",
-  ...longText,
+
+// specific use
+const art = {
+  "id": "art",
+  "name": "Art",
+  "type": "Object",
+  "localized": false,
+  "required": true,
+  "validations": [],
+  "disabled": false,
+  "omitted": false
+}
+const attribution = {
+  "id": "attribution",
+  "name": "Attribution",
+  "type": "Link",
+  "localized": false,
+  "required": false,
+  "validations": [
+    {
+      "linkContentType": [
+        "person"
+      ]
+    }
+  ],
+  "disabled": false,
+  "omitted": false,
+  "linkType": "Entry"
+}
+const borders = {
+    "id": "borders",
+    "name": "Borders",
+    "type": "Symbol",
+    "localized": false,
+    "required": false,
+    "validations": [
+      {
+        "in": [
+          "All",
+          "Bottom",
+          "None"
+        ]
+      }
+    ],
+    "defaultValue": {
+      "en-US": "All"
+    },
+    "disabled": false,
+    "omitted": false
+  }
+
+// todo: determine why components only has directory
+const components = {
+  "id": "components",
+  "name": "Components",
+  "type": "Array",
+  "localized": false,
+  "required": false,
+  "validations": [],
+  "disabled": false,
+  "omitted": false,
+  "items": {
+    "type": "Link",
+    "validations": [
+      {
+        "linkContentType": [
+          "directory"
+        ]
+      }
+    ],
+    "linkType": "Entry"
+  }
 }
 const directoryArray =  {
   "id": "list",
@@ -345,16 +540,6 @@ const directoryArray =  {
     "linkType": "Entry"
   }
 }
-const endDate = {
-  "id": "endDate",
-  "name": "End Date",
-  "type": "Date",
-  "localized": false,
-  "required": false,
-  "validations": [],
-  "disabled": false,
-  "omitted": false
-}
 const eventId = {
   "id": "eventId",
   "name": "Event ID",
@@ -374,16 +559,6 @@ const eventId = {
   ],
   "disabled": false,
   "omitted": false
-}
-const externalUrl = {
-  "id": "externalUrl",
-  "name": "External URL",
-  ...shortTextOptional,
-}
-const eyebrow = {
-  "id": "eyebrow",
-  "name": "Eyebrow",
-  ...shortTextOptional,
 }
 const featuredArtwork = {
   "id": "featuredArtwork",
@@ -412,28 +587,6 @@ const featuredArtwork = {
     "linkType": "Entry"
   }
 }
-const finePrint = {
-  "id": "finePrint",
-  "name": "Fine Print",
-  ...longText,
-}
-const fullImage = {
-  "id": "fullImage",
-  "name": "Full Image",
-  "type": "Link",
-  "localized": false,
-  "required": false,
-  "validations": [
-    {
-      "linkMimetypeGroup": [
-        "image"
-      ]
-    }
-  ],
-  "disabled": false,
-  "omitted": false,
-  "linkType": "Asset"
-}
 const gallery = {
   "id": "gallery",
   "name": "Gallery",
@@ -454,11 +607,6 @@ const gallery = {
     ],
     "linkType": "Asset"
   }
-}
-const givenNames = {
-  "id": "givenNames",
-  "name": "Given Names",
-  ...shortTextOptional,
 }
 const grid = {
   "id": "grid",
@@ -481,11 +629,6 @@ const grid = {
     "linkType": "Entry"
   }
 }
-const heading = {
-  "id": "heading",
-  "name": "Heading",
-  ...shortTextOptional,
-}
 const hero = {
   "id": "hero",
   "name": "Hero",
@@ -502,28 +645,6 @@ const hero = {
   "disabled": false,
   "omitted": false,
   "linkType": "Entry"
-}
-const heroCaption = {
-  "id": "heroCaption",
-  "name": "Hero Caption",
-  ...shortTextOptional,
-}
-const heroImage = {
-  "id": "heroImage",
-  "name": "Hero Image",
-  "type": "Link",
-  "localized": false,
-  "required": false,
-  "validations": [
-    {
-      "linkMimetypeGroup": [
-        "image"
-      ]
-    }
-  ],
-  "disabled": false,
-  "omitted": false,
-  "linkType": "Asset"
 }
 const hoursHeading = {
   "id": "hoursHeading",
@@ -559,23 +680,6 @@ const icon = {
   "disabled": false,
   "omitted": false
 }
-const image = {
-  "id": "image",
-  "name": "Image",
-  "type": "Link",
-  "localized": false,
-  "required": false,
-  "validations": [
-    {
-      "linkMimetypeGroup": [
-        "image"
-      ]
-    }
-  ],
-  "disabled": false,
-  "omitted": false,
-  "linkType": "Asset"
-}
 const images = {
   "id": "images",
   "name": "Images",
@@ -603,23 +707,6 @@ const images = {
     "linkType": "Asset"
   }
 }
-const imageLeft = {
-  "id": "imageLeft",
-  "name": "Left Image",
-  "type": "Link",
-  "localized": false,
-  "required": false,
-  "validations": [
-    {
-      "linkMimetypeGroup": [
-        "image"
-      ]
-    }
-  ],
-  "disabled": false,
-  "omitted": false,
-  "linkType": "Asset"
-}
 const imageRestricted = {
   "id": "image",
   "name": "Image",
@@ -643,49 +730,6 @@ const imageRestricted = {
   "omitted": false,
   "linkType": "Asset"
 }
-const imageRight = {
-  "id": "imageRight",
-  "name": "Right Image",
-  "type": "Link",
-  "localized": false,
-  "required": false,
-  "validations": [
-    {
-      "linkMimetypeGroup": [
-        "image"
-      ]
-    }
-  ],
-  "disabled": false,
-  "omitted": false,
-  "linkType": "Asset"
-}
-const invertColors = {
-  "id": "invertColors",
-  "name": "Invert Colors",
-  "type": "Boolean",
-  "localized": false,
-  "required": false,
-  "validations": [],
-  "defaultValue": {
-    "en-US": false
-  },
-  "disabled": false,
-  "omitted": false
-}
-const isArtist = {
-  "id": "isArtist",
-  "name": "Is Artist",
-  "type": "Boolean",
-  "localized": false,
-  "required": false,
-  "validations": [],
-  "defaultValue": {
-    "en-US": true
-  },
-  "disabled": false,
-  "omitted": false
-}
 const location = {
   "id": "location",
   "name": "Location",
@@ -699,16 +743,6 @@ const location = {
       }
     }
   ],
-  "disabled": false,
-  "omitted": false
-}
-const locationIsAddress = {
-  "id": "locationIsAddress",
-  "name": "Location Is Address",
-  "type": "Boolean",
-  "localized": false,
-  "required": false,
-  "validations": [],
   "disabled": false,
   "omitted": false
 }
@@ -748,11 +782,6 @@ const maxColumns = {
   },
   "disabled": false,
   "omitted": false
-}
-const moreInfo = {
-  "id": "moreInfo",
-  "name": "More Info",
-  ...longText,
 }
 const name = {
   "id": "name",
@@ -882,23 +911,6 @@ const relatedArtwork = {
     "linkType": "Entry"
   }
 }
-const sectionImage = {
-  "id": "sectionImage",
-  "name": "Section Image",
-  "type": "Link",
-  "localized": false,
-  "required": false,
-  "validations": [
-    {
-      "linkMimetypeGroup": [
-        "image"
-      ]
-    }
-  ],
-  "disabled": false,
-  "omitted": false,
-  "linkType": "Asset"
-}
 const sections = {
   "id": "sections",
   "name": "Sections",
@@ -931,36 +943,6 @@ const sections = {
     ],
     "linkType": "Entry"
   }
-}
-const seo = {
-  "id": "seo",
-  "name": "SEO",
-  "type": "Link",
-  "localized": false,
-  "required": false,
-  "validations": [
-    {
-      "linkContentType": [
-        "seo"
-      ]
-    }
-  ],
-  "disabled": false,
-  "omitted": false,
-  "linkType": "Entry"
-}
-const showArrow = {
-  "id": "showArrow",
-  "name": "Show Arrow",
-  "type": "Boolean",
-  "localized": false,
-  "required": false,
-  "validations": [],
-  "defaultValue": {
-    "en-US": true
-  },
-  "disabled": false,
-  "omitted": false
 }
 const similarArtwork = {
   "id": "similarArtwork",
@@ -1045,29 +1027,6 @@ const slug = {
   "disabled": false,
   "omitted": false
 }
-const splitView = {
-  "id": "splitView",
-    "name": "Split View",
-    "type": "Boolean",
-    "localized": false,
-    "required": false,
-    "validations": [],
-    "defaultValue": {
-    "en-US": true
-  },
-  "disabled": false,
-    "omitted": false
-}
-const startDate = {
-  "id": "startDate",
-  "name": "Start Date",
-  "type": "Date",
-  "localized": false,
-  "required": false,
-  "validations": [],
-  "disabled": false,
-  "omitted": false
-}
 const stats = {
   "id": "stats",
   "name": "Stats",
@@ -1095,16 +1054,6 @@ const stats = {
     "linkType": "Entry"
   }
 }
-const subheading = {
-  "id": "subheading",
-  "name": "Subheading",
-  ...shortTextOptional,
-}
-const subtitle = {
-  "id": "subtitle",
-  "name": "Subtitle",
-  ...shortTextOptional,
-}
 const tags = {
   "id": "tags",
   "name": "Tags",
@@ -1128,51 +1077,6 @@ const tessituraReference = {
   "validations": [],
   "disabled": false,
   "omitted": false
-}
-const text = {
-  "id": "text",
-  "name": "Text",
-  "type": "RichText",
-  "localized": false,
-  "required": false,
-  "validations": [
-    {
-      "enabledMarks": [
-        "bold",
-        "italic",
-        "underline",
-        "code"
-      ],
-      "message": "Only bold, italic, underline, and code marks are allowed"
-    },
-    {
-      "enabledNodeTypes": [
-        "heading-1",
-        "heading-2",
-        "heading-3",
-        "heading-4",
-        "heading-5",
-        "heading-6",
-        "ordered-list",
-        "unordered-list",
-        "hr",
-        "blockquote",
-        "embedded-entry-block",
-        "embedded-asset-block",
-        "table",
-        "hyperlink",
-        "entry-hyperlink",
-        "asset-hyperlink",
-        "embedded-entry-inline"
-      ],
-      "message": "Only heading 1, heading 2, heading 3, heading 4, heading 5, heading 6, ordered list, unordered list, horizontal rule, quote, block entry, asset, table, link to Url, link to entry, link to asset, and inline entry nodes are allowed"
-    },
-    {
-      "nodes": {}
-    }
-  ],
-  "disabled": true,
-  "omitted": true
 }
 const theme = {
   "id": "theme",
@@ -1200,41 +1104,6 @@ const theme = {
   "disabled": false,
   "omitted": false
 }
-const themeBackground = {
-  "id": "themeBackground",
-    "name": "Theme Background",
-    "type": "Boolean",
-    "localized": false,
-    "required": false,
-    "validations": [],
-    "defaultValue": {
-    "en-US": false
-  },
-  "disabled": false,
-    "omitted": false
-}
-const thumbnail = {
-  "id": "thumbnail",
-  "name": "Thumbnail",
-  "type": "Link",
-  "localized": false,
-  "required": false,
-  "validations": [
-    {
-      "linkMimetypeGroup": [
-        "image"
-      ]
-    }
-  ],
-  "disabled": false,
-  "omitted": false,
-  "linkType": "Asset"
-}
-const title = {
-  "id": "title",
-  "name": "Title",
-  ...shortTextOptional,
-}
 const titleBreaking = {
   "id": "title",
   "name": "Title",
@@ -1250,23 +1119,6 @@ const titleBreaking = {
   ],
   "disabled": false,
   "omitted": false
-}
-const titleImage = {
-  "id": "titleImage",
-  "name": "Title Image",
-  "type": "Link",
-  "localized": false,
-  "required": false,
-  "validations": [
-    {
-      "linkMimetypeGroup": [
-        "image"
-      ]
-    }
-  ],
-  "disabled": false,
-  "omitted": false,
-  "linkType": "Asset"
 }
 const url = {
   "id": "link",
@@ -1312,16 +1164,6 @@ const videos = {
     "linkType": "Asset"
 }
 }
-const viewCollectionCta = {
-  "id": "viewCollectionCta",
-  "name": "View Collection CTA",
-  ...shortTextOptional,
-}
-const viewSimilarCta = {
-  "id": "viewSimilarCta",
-  "name": "View Similar CTA",
-  ...shortTextOptional,
-}
 const whatToExpect = {
   "id": "whatToExpect",
   "name": "What to Expect",
@@ -1341,8 +1183,8 @@ export default {
   contentBlock,
   cta,
   days,
-  description,
   descriptionLong,
+  descriptionMedium,
   descriptionShort,
   details,
   directoryArray,
@@ -1387,6 +1229,7 @@ export default {
   preview,
   quote,
   relatedArtwork,
+  richText,
   saturday,
   sectionImage,
   sections,
@@ -1405,7 +1248,6 @@ export default {
   subtitle,
   tags,
   tessituraReference,
-  text,
   theme,
   themeBackground,
   thumbnail,

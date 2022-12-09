@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'
 import { promises } from 'fs'
+import library from './library/fields'
 import contentful, {ContentFields, ContentTypeProps, KeyValueMap} from 'contentful-management'
 
 dotenv.config({path: '.env'})
@@ -23,11 +24,12 @@ const scopedPlainClient = contentful.createClient(
 )
 
 const data = <object>await promises.readFile(jsonFilePath).catch((err) => console.error('Failed to read file', err))
+type ObjectKey = keyof typeof library
 const obj: {
   name: string
   description: string
   displayField: string
-  fields: ContentFields<KeyValueMap>[]
+  fields: ObjectKey[]
   sys: {
     id: string
   }
@@ -54,6 +56,13 @@ if (contentTypeId) {
   if (error?.status === 404) {
     // create the content type if contentTypeId doesn't exist
     console.log('Create new contentType...')
+    console.log(JSON.stringify(obj))
+    let fields = []
+    const dataFields = fields?.map((field) => {
+      // const myVar = field as ObjectKey
+      fields = [...fields, library[field]]
+      console.log(JSON.stringify(fields))
+    })
     // const res = await scopedPlainClient.contentType.createWithId({ contentTypeId },
     //   {
     //     name,

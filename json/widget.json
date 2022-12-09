@@ -1,0 +1,9 @@
+{
+  "sys": {
+    "id": "widget"
+  },
+  "name": "Widget Test",
+  "description": "A widget content type",
+  "displayField": "name",
+  "fields": ["name", "details", "endDate"]
+}
