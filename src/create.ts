@@ -55,9 +55,18 @@ if (contentTypeId) {
   }
   if (error?.status === 404) {
     // create the content type if contentTypeId doesn't exist
-    console.log('Create new contentType...')
-    // let fields = []
-    const dataFields = fields?.map((field) => <ContentFields>library[field])
+    console.log('Creating new contentType...')
+    const dataFields = []
+    fields?.forEach((field) => {
+      let f = <ContentFields | ContentFields[]>library[field]
+      if (f instanceof Array) {
+        f.forEach((x: ContentFields) => {
+          dataFields.push(x)
+        })
+      } else {
+        dataFields.push(f)
+      }
+    })
     console.log(JSON.stringify(dataFields))
     const res = await scopedPlainClient.contentType.createWithId({ contentTypeId },
       {

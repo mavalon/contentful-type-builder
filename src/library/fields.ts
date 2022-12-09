@@ -13,7 +13,7 @@ const themes = [
 ]
 
 // hours
-const schedule = (name, id) => {
+const schedule = (id, name) => {
   return {
     "id": id,
     "name": name,
@@ -59,17 +59,17 @@ const schedule = (name, id) => {
     }
   }
 }
-const monday = schedule('Monday', 'monday')
-const tuesday = schedule('Tuesday', 'tuesday')
-const wednesday = schedule('Wednesday', 'wednesday')
-const thursday = schedule('Thursday', 'thursday')
-const friday = schedule('Friday', 'friday')
-const saturday = schedule('Saturday', 'saturday')
-const sunday = schedule('Sunday', 'sunday')
+const monday = schedule('monday', 'Monday')
+const tuesday = schedule('tuesday', 'Tuesday')
+const wednesday = schedule('wednesday', 'Wednesday')
+const thursday = schedule('thursday', 'Thursday')
+const friday = schedule('friday', 'Friday')
+const saturday = schedule('saturday', 'Saturday')
+const sunday = schedule('sunday', 'Sunday')
 const days = [monday, tuesday, wednesday, thursday, friday, saturday, sunday]
 
 // short text (required field)
-const shortTextRequired = (name, id) => {
+const shortTextRequired = (id, name) => {
   return  {
     "id": id,
     "name": name,
@@ -81,15 +81,15 @@ const shortTextRequired = (name, id) => {
     "omitted": false
   }
 }
-const cta = shortTextRequired('CTA', 'cta')
-const fullName = shortTextRequired('Full Name', 'fullName')
-const gridHeading = shortTextRequired('Grid Heading', 'gridHeading')
-const nameRepeatable = shortTextRequired('Name', 'name')
-const surname = shortTextRequired('Surname', 'surname')
-const value =  shortTextRequired('Value', 'value')
+const cta = shortTextRequired('cta', 'CTA')
+const fullName = shortTextRequired('fullName', 'Full Name')
+const gridHeading = shortTextRequired('gridHeading', 'Grid Heading')
+const nameRepeatable = shortTextRequired('name', 'Name')
+const surname = shortTextRequired('surname', 'Surname')
+const value =  shortTextRequired('value', 'Value')
 
 // unique field
-const unique = (name, id) => {
+const unique = (id, name) => {
   return {
     "id": id,
     "name": name,
@@ -616,10 +616,14 @@ const tessituraReference = {
   "omitted": false
 }
 
+/* todo: add more field groupings */
+const basics = [name, slug, descriptionShort]
+
 export default {
   art,
   attribution,
   audio,
+  basics,
   body,
   borders,
   button,
